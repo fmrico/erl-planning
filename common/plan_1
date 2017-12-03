@@ -1,0 +1,26 @@
+Number of literals: 4
+Constructing lookup tables:
+Post filtering unreachable actions: 
+[01;34mNo analytic limits found, not considering limit effects of goal-only operators[00m
+All the ground actions in this problem are compression-safe
+Initial heuristic = 3.000
+b (2.000 | 10.000)b (1.000 | 20.001)
+; Plan found with metric 30.002
+; States evaluated so far: 4
+; Time 0.00
+0.000: (wait_bell doorbell pepper)  [10.000]
+10.001: (recognize_person doorbell)  [10.000]
+20.002: (attend_deli)  [10.000]
+
+ * All goal deadlines now no later than 30.002
+
+Resorting to best-first search
+b (2.000 | 10.000)b (1.000 | 20.001)
+Problem Unsolvable
+;;;; Solution Found
+; States evaluated: 8
+; Cost: 30.002
+; Time 0.00
+0.000: (wait_bell doorbell pepper)  [10.000]
+10.001: (recognize_person doorbell)  [10.000]
+20.002: (attend_deli)  [10.000]
