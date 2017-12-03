@@ -1,4 +1,4 @@
-#include "test_rosplan/RP_wait_bell.h"
+#include "erl_planning/RP_wait_bell.h"
 
 namespace KCL_rosplan {
 

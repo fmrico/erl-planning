@@ -1,6 +1,6 @@
 #include <ros/ros.h>
 
-#include "test_rosplan/Executor.h"
+#include "erl_planning/Executor.h"
 
 class ERLExecutor: public Executor
 {
@@ -37,6 +37,9 @@ public:
 		Fact fact_robot_ready;
 		fact_robot_ready.push_back(Fact_Values("r", "pepper"));
 		add_fact("robot_ready", fact_robot_ready);
+		Fact fact_bell_ringed;
+		fact_bell_ringed.push_back(Fact_Values("b", "doorbell"));
+		add_fact("bell_ringed", fact_bell_ringed);
 
 		Fact fact_visitor_attended;
 		add_goal("visitor_attended");

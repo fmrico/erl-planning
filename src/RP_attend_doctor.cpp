@@ -1,4 +1,4 @@
-#include "test_rosplan/RP_attend_doctor.h"
+#include "erl_planning/RP_attend_doctor.h"
 
 namespace KCL_rosplan {
 
@@ -11,7 +11,7 @@ namespace KCL_rosplan {
 	{
 
 		ROS_INFO("RP_attend_doctor [%d] %s for %fsec in %fsec...",
-			msg->action_id, msg->name.c_str(), 
+			msg->action_id, msg->name.c_str(),
 			msg->duration, msg->dispatch_time);
 
 			ros::Duration(5).sleep();

@@ -1,6 +1,6 @@
 #include <ros/ros.h>
 #include "rosplan_action_interface/RPActionInterface.h"
-#include <test_rosplan/KMS_Client.h>
+#include <erl_planning/KMS_Client.h>
 
 
 #ifndef KCL_attend_deli

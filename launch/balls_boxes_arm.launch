@@ -1,6 +1,6 @@
 <!-- ROSPlan turtlebot demo; requires turtlebot_gazebo -->
 <launch>
-<param name="/rosplan/domain_path" value="$(find test_rosplan)/domains/domain_balls_boxes_arm.pddl" />
+<param name="/rosplan/domain_path" value="$(find erl_planning)/domains/domain_balls_boxes_arm.pddl" />
 
 	<node name="rosplan_knowledge_base" pkg="rosplan_knowledge_base" type="knowledgeBase" respawn="false" output="screen">
 	</node>
@@ -12,16 +12,16 @@
 	</node>
 
 	<node name="rosplan_planning_system" pkg="rosplan_planning_system" type="planner" respawn="false" output="screen">
-		<param name="data_path" value="$(find test_rosplan)/common/" />
-		<param name="problem_path" value="$(find test_rosplan)/common/problem.pddl" />
-		<param name="strl_file_path" value="$(find test_rosplan)/common/plan.strl" />
+		<param name="data_path" value="$(find erl_planning)/common/" />
+		<param name="problem_path" value="$(find erl_planning)/common/problem.pddl" />
+		<param name="strl_file_path" value="$(find erl_planning)/common/plan.strl" />
 
 		<param name="planner_command" value="timeout 10 $(find rosplan_planning_system)/common/bin/popf -n DOMAIN PROBLEM" />
 		<param name="generate_default_problem" value="true" />
 		<param name="max_dispatch_attempts" value="2" />
   </node>
 
-	<node name="rosplan_interface_moveball" pkg="test_rosplan" type="rpmoveball" respawn="false" output="screen">
+	<node name="rosplan_interface_moveball" pkg="erl_planning" type="rpmoveball" respawn="false" output="screen">
 		<param name="pddl_action_name" value="move_ball" />
 	</node>
 

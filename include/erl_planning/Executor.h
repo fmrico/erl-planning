@@ -3,7 +3,7 @@
 
 #include <ros/ros.h>
 
-#include <test_rosplan/KMS_Client.h>
+#include <erl_planning/KMS_Client.h>
 #include <std_msgs/String.h>
 #include <std_srvs/Empty.h>
 #include <utility>
