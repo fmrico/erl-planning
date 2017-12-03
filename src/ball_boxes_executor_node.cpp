@@ -1,6 +1,6 @@
 #include <ros/ros.h>
 
-#include "test_rosplan/Executor.h"
+#include "erl_planning/Executor.h"
 
 class BoxesExecutor: public Executor
 {
