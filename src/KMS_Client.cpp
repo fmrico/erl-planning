@@ -25,7 +25,11 @@ KMS_Client::add_instance(const std::string instance_type, const std::string attr
 			attribute_name.c_str());
 		return false;
 	}else
+	{
+		ROS_INFO("Instance [%s] added", instance_type.c_str());
 		return true;
+	}
+
 }
 
 
@@ -52,7 +56,10 @@ KMS_Client::remove_fact(std::string attribute_name, const Fact& fact)
 		ROS_ERROR("Could not add the fact [%s]", attribute_name.c_str());
 		return false;
 	}else
+	{
+		ROS_INFO("Fact [%s] removed", attribute_name.c_str());
 		return true;
+	}
 }
 
 
@@ -79,7 +86,10 @@ KMS_Client::add_fact(std::string attribute_name, const Fact& fact)
 		ROS_ERROR("Could not add the fact [%s]", attribute_name.c_str());
 		return false;
 	}else
+	{
+		ROS_INFO("Fact [%s] added", attribute_name.c_str());
 		return true;
+	}
 }
 
 bool

@@ -9,15 +9,52 @@ namespace KCL_rosplan {
 
 	bool RP_recognize_person::concreteCallback(const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg)
 	{
+		if(!checkOverAllConditions(msg))
+		{
+			ROS_ERROR("ALL OVER not meet: cancelling");
+			return false;
+		}
 
 		ROS_INFO("RP_recognize_person [%d] %s (%s) for %fsec in %fsec...",
 			msg->action_id, msg->name.c_str(), msg->parameters[0].value.c_str(),
 			msg->duration, msg->dispatch_time);
 
 
-			ros::Duration(2).sleep();
-			add_fact("deli_recognized");
-			ros::Duration(2).sleep();
+			bool finished = false;
+			ros::Rate rate(1);
+
+			int counter=0;
+
+			while(ros::ok() && !finished)
+			{
+				if(!checkOverAllConditions(msg))
+				{
+					ROS_ERROR("ALL OVER not meet: cancelling");
+					return false;
+				}
+
+				ROS_INFO("Attending Doctor: OK");
+
+				if(counter == 2)
+				{
+					add_fact("deli_recognized");
+				}
+
+				if(counter == 4)
+				{
+					finished = true;
+				}
+
+				counter++;
+				ros::spinOnce();
+				rate.sleep();
+			}
+
+			if(!checkAtEndConditions(msg))
+			{
+				ROS_ERROR("AT END not meet: cancelling");
+				return false;
+			}
 
 			ROS_INFO("RP_recognize_person Done!!!");
 

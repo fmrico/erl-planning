@@ -10,11 +10,46 @@ namespace KCL_rosplan {
 	bool RP_attend_doctor::concreteCallback(const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg)
 	{
 
+		if(!checkAtStartConditions(msg))
+		{
+			ROS_ERROR("AT Start not meet: cancelling");
+			return false;
+		}
+
 		ROS_INFO("RP_attend_doctor [%d] %s for %fsec in %fsec...",
 			msg->action_id, msg->name.c_str(),
 			msg->duration, msg->dispatch_time);
 
-			ros::Duration(5).sleep();
+			bool finished = false;
+			ros::Rate rate(1);
+
+			int counter=0;
+
+			while(ros::ok() && !finished)
+			{
+				if(!checkOverAllConditions(msg))
+				{
+					ROS_ERROR("ALL OVER not meet: cancelling");
+					return false;
+				}
+
+				ROS_INFO("Attending Doctor: OK");
+
+				if(counter == 5)
+				{
+					finished = true;
+				}
+
+				counter++;
+				ros::spinOnce();
+				rate.sleep();
+			}
+
+			if(!checkAtEndConditions(msg))
+			{
+				ROS_ERROR("AT END not meet: cancelling");
+				return false;
+			}
 
 			ROS_INFO("RP_attend_doctor Done!!!");
 		return true;

@@ -15,8 +15,11 @@ namespace KCL_rosplan {
 		  msg->parameters[1].value.c_str(),   msg->parameters[2].value.c_str(),
 			msg->duration, msg->dispatch_time);
 
-			ros::Duration(5).sleep();
-
+			for(int i=0; i<5; i++)
+			{
+				checkOverAllConditions(msg);
+				ros::Duration(1).sleep();
+			}
 			ROS_INFO("RPMoveBall Done!!!");
 		return true;
 	}

@@ -56,7 +56,7 @@ public:
 
 		Fact fact_blue_at_box_C;
 		fact_blue_at_box_C.push_back(Fact_Values("bl", "blue"));
-		fact_blue_at_box_C.push_back(Fact_Values("bx", "B"));
+		fact_blue_at_box_C.push_back(Fact_Values("bx", "A"));
 		add_goal("ball_at_box", fact_blue_at_box_C);
 
 	}

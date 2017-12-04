@@ -10,15 +10,48 @@ namespace KCL_rosplan {
 	bool RP_wait_bell::concreteCallback(const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg)
 	{
 
+		if(!checkAtStartConditions(msg))
+		{
+			ROS_ERROR("AT Start not meet: cancelling");
+			return false;
+		}
+
 
 		ROS_INFO("RP_wait_bell [%d] %s (%s: %s) for %fsec in %fsec...",
 			msg->action_id, msg->name.c_str(), msg->parameters[0].value.c_str(),
 		  msg->parameters[1].value.c_str(),
 			msg->duration, msg->dispatch_time);
 
-			ros::Duration(5).sleep();
+		bool finished = false;
+		ros::Rate rate(1);
 
-			ROS_INFO("RP_wait_bell Done!!!");
+		int counter=0;
+
+		while(ros::ok() && !finished)
+		{
+			if(!checkOverAllConditions(msg))
+			{
+				ROS_ERROR("ALL OVER not meet: cancelling");
+				return false;
+			}
+
+			if(counter == 5)
+			{
+				finished = true;
+			}
+
+			counter++;
+			ros::spinOnce();
+			rate.sleep();
+		}
+
+		if(!checkAtEndConditions(msg))
+		{
+			ROS_ERROR("AT END not meet: cancelling");
+			return false;
+		}
+
+		ROS_INFO("RP_wait_bell Done!!!");
 		return true;
 	}
 }

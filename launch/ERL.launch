@@ -18,7 +18,7 @@
 
 		<param name="planner_command" value="timeout 10 $(find rosplan_planning_system)/common/bin/popf -n DOMAIN PROBLEM" />
 		<param name="generate_default_problem" value="true" />
-		<param name="max_dispatch_attempts" value="2" />
+		<param name="max_dispatch_attempts" value="20000" />
   </node>
 
 	<node name="rosplan_interface_wait_bell" pkg="erl_planning" type="rp_wait_bell" respawn="false" output="screen">

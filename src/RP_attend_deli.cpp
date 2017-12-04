@@ -9,17 +9,54 @@ namespace KCL_rosplan {
 
 	bool RP_attend_deli::concreteCallback(const rosplan_dispatch_msgs::ActionDispatch::ConstPtr& msg)
 	{
+		if(!checkAtStartConditions(msg))
+		{
+			ROS_ERROR("AT Start not meet: cancelling");
+			return false;
+		}
 
 		ROS_INFO("RP_attend_deli [%d] %s for %fsec in %fsec...",
 			msg->action_id, msg->name.c_str(),
 			msg->duration, msg->dispatch_time);
 
-			ros::Duration(5).sleep();
-			add_fact("doctor_recognized");
-			remove_fact("deli_recognized");
-			ros::Duration(15).sleep();
+		bool finished = false;
+		ros::Rate rate(1);
 
-			ROS_INFO("RP_attend_deli Done!!!");
+		int counter=0;
+
+		while(ros::ok() && !finished)
+		{
+			if(!checkOverAllConditions(msg))
+			{
+				ROS_ERROR("ALL OVER not meet: cancelling");
+				return false;
+			}
+
+			ROS_INFO("Attending Deli: OK");
+
+			if(counter == 5)
+			{
+				add_fact("doctor_recognized");
+				remove_fact("deli_recognized");
+			}
+
+			if(counter == 10)
+			{
+				finished = true;
+			}
+
+			counter++;
+			ros::spinOnce();
+			rate.sleep();
+		}
+
+		if(!checkAtEndConditions(msg))
+		{
+			ROS_ERROR("AT END not meet: cancelling");
+			return false;
+		}
+
+		ROS_INFO("RP_attend_deli Done!!!");
 		return true;
 	}
 }
