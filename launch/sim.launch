@@ -1,0 +1,10 @@
+<!-- ROSPlan turtlebot demo; requires turtlebot_gazebo -->
+<launch>
+
+	<include file="$(find csuro_robots)/launch/sim.launch" >
+	</include>
+
+	<include file="$(find csuro_navigation)/launch/navigation.launch" >
+	</include>
+
+</launch>

@@ -4,8 +4,11 @@
 KMS_Client::KMS_Client():
 	nh_(),
 	 ku_client_(nh_.serviceClient<rosplan_knowledge_msgs::KnowledgeUpdateService>
-		 ("/kcl_rosplan/update_knowledge_base"))
+		 ("/kcl_rosplan/update_knowledge_base")),
+	 kq_client_(nh_.serviceClient<rosplan_knowledge_msgs::GetAttributeService>
+		 ("/kcl_rosplan/get_current_knowledge"))
 {
+
 }
 
 bool
@@ -32,6 +35,24 @@ KMS_Client::add_instance(const std::string instance_type, const std::string attr
 
 }
 
+KMS_Client::Fact KMS_Client::getFactFromString(std::string predicate, const std::vector<std::string>&ops)
+{
+	Fact ret;
+
+	size_t pos;
+	pos = predicate.find(" ");
+	predicate = predicate.substr(pos+1, std::string::npos);
+
+	for(int i=0; i<ops.size(); i++)
+	{
+		pos = predicate.find(" ");
+
+		ret.push_back(Fact_Values(ops[i], predicate.substr(0, pos)));
+		predicate = predicate.substr(pos+1, std::string::npos);
+	}
+
+	return ret;
+}
 
 bool
 KMS_Client::remove_fact(std::string attribute_name, const Fact& fact)
@@ -90,6 +111,43 @@ KMS_Client::add_fact(std::string attribute_name, const Fact& fact)
 		ROS_INFO("Fact [%s] added", attribute_name.c_str());
 		return true;
 	}
+}
+
+std::list<std::string>
+KMS_Client::getFactsWithPredicate(const std::string& predicate,
+	const std::vector<std::string>& operators)
+{
+	std::list<std::string> ret;
+
+	rosplan_knowledge_msgs::GetAttributeService query_fact_instance;
+	query_fact_instance.request.predicate_name = predicate;
+
+	if (!kq_client_.call(query_fact_instance)) {
+		ROS_ERROR("Could not query for facts with predicate [%s]", predicate.c_str());
+		return ret;
+	}
+
+	std::vector<rosplan_knowledge_msgs::KnowledgeItem>::iterator it;
+	for(it=query_fact_instance.response.attributes.begin(); it!=query_fact_instance.response.attributes.end();++it)
+	{
+		std::string ret_predicate(predicate);
+		std::vector<std::string> ops(operators.size());
+
+		std::vector<diagnostic_msgs::KeyValue>::iterator it2;
+		for(it2=it->values.begin(); it2!=it->values.end(); ++it2)
+		{
+			for(int i=0; i<operators.size(); i++)
+				if(operators[i] == it2->key)
+				ops[i] = it2->value;
+		}
+
+		for(int i=0; i<ops.size(); i++)
+			ret_predicate = ret_predicate + " " + ops[i];
+
+		ret.push_back(ret_predicate);
+	}
+
+	return ret;
 }
 
 bool

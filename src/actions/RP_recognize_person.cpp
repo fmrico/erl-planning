@@ -1,4 +1,4 @@
-#include "erl_planning/RP_recognize_person.h"
+#include "erl_planning/actions/RP_recognize_person.h"
 
 namespace KCL_rosplan {
 

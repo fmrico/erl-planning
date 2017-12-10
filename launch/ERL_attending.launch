@@ -1,0 +1,76 @@
+<!-- ROSPlan turtlebot demo; requires turtlebot_gazebo -->
+<launch>
+
+	<param name="/rosplan/data_path" value="$(find rosplan_planning_system)/common/" />
+	<param name="/rosplan/planner_path" value="$(find rosplan_planning_system)/common/bin/" />
+
+		<param name="/rosplan/domain_path" value="$(find erl_planning)/domains/domain_erl_attending.pddl" />
+
+	<node name="rosplan_knowledge_base" pkg="rosplan_knowledge_base" type="knowledgeBase" respawn="false" output="screen">
+	    <param name="database_path" value="$(find rosplan_knowledge_base)/common/mongoDB/" />
+		<!-- conditional planning flags -->
+		<param name="use_unknowns" value="False" />
+	</node>
+
+	<node name="rosplan_scene_base" pkg="mongodb_store" type="mongodb_server.py" respawn="false" output="screen">
+	    <param name="database_path" value="$(find rosplan_knowledge_base)/common/mongoDB" />
+	</node>
+
+	<node name="rosplan_scene_message_store" pkg="mongodb_store" type="message_store_node.py" respawn="false" output="screen">
+	</node>
+
+	<param name="waypoint_file" value="$(find erl_planning)/common/sim_waypoints.txt" />
+	<node name="rosplan_interface_mapping" pkg="rosplan_interface_mapping" type="rpsimplemapServer" respawn="false" output="screen">
+		<param name="fixed_frame" value="/map" />
+	</node>
+
+	<node name="rosplan_planning_system" pkg="rosplan_planning_system" type="planner" respawn="false" output="screen">
+		<param name="data_path" value="$(find erl_planning)/common/" />
+		<param name="problem_path" value="$(find erl_planning)/common/problem.pddl" />
+		<param name="strl_file_path" value="$(find erl_planning)/common/plan.strl" />
+
+		<param name="planner_command" value="timeout 10 $(find rosplan_planning_system)/common/bin/popf -n DOMAIN PROBLEM" />
+		<param name="generate_default_problem" value="true" />
+		<param name="max_dispatch_attempts" value="20000" />
+  </node>
+
+
+	<!-- INTERFACES PRE-EXISTENTES -->
+	<node name="rosplan_roadmap_server" pkg="rosplan_interface_mapping" type="rproadmapServer" respawn="false" output="screen">
+	    <param name="/rosplan/data_path" value="$(find erl_planning)/common/" />
+	    <param name="cost_map_topic" value="/move_base/global_costmap/costmap" />
+	    <param name="odom_topic" value="/odom" />
+	    <param name="use_static_map" value="false" />
+	    <param name="static_map_service" value="/static_map" />
+	</node>
+
+	<node name="rosplan_interface_move_to" pkg="erl_planning" type="rp_move_to" respawn="false" output="screen">
+		<param name="action_server" value="/move_base" />
+		<param name="pddl_action_name" value="move_to" />
+	</node>
+
+	<node name="rosplan_interface_escort_to" pkg="erl_planning" type="rp_escort_to" respawn="false" output="screen">
+		<param name="action_server" value="/move_base" />
+		<param name="pddl_action_name" value="escort_to" />
+	</node>
+
+
+	<!-- INTERFACES PROPIOS-->
+	<!--<node name="rosplan_interface_wait_bell" pkg="erl_planning" type="rp_wait_bell" respawn="false" output="screen">
+		<param name="pddl_action_name" value="wait_bell" />
+	</node>
+
+	<node name="rosplan_interface_attend_deli" pkg="erl_planning" type="rp_attend_deli" respawn="false" output="screen">
+		<param name="pddl_action_name" value="attend_deli" />
+	</node>
+
+	<node name="rosplan_interface_attend_doctor" pkg="erl_planning" type="rp_attend_doctor" respawn="false" output="screen">
+		<param name="pddl_action_name" value="attend_doctor" />
+	</node>
+
+
+	<node name="rosplan_interface_recognize_person" pkg="erl_planning" type="rp_recognize_person" respawn="false" output="screen">
+		<param name="pddl_action_name" value="recognize_person" />
+	</node>-->
+
+</launch>
